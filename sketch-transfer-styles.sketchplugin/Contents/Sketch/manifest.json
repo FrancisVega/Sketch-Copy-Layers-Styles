@@ -4,17 +4,25 @@
     "author": "Francis Vega",
     "author": "hisconer@gmail.com",
     "homepage": "",
-    "version": 0.2,
+    "version": 0.4,
     "identifier": "com.example.sketch.copystyles",
     "appcast": "https://api.sketchpacks.com/v1/plugins/com.example.sketch.layoutsettings/appcast",
     "compatibleVersion": "48.2",
     "bundleVersion": 1,
     "commands": [
         {
-            "name": "Transfer Style",
-            "identifier": "transferStyles",
+            "name": "Copy Style",
+            "identifier": "copystyle",
             "handlers" : {
-                "run" : "transfer"
+                "run" : "copyStyle"
+            },
+            "script": "sketch-copy-style.js"
+        },
+        {
+            "name": "Paste Style",
+            "identifier": "pastestyle",
+            "handlers" : {
+                "run" : "paste"
             },
             "script": "sketch-copy-style.js"
         }
@@ -22,7 +30,8 @@
     "menu": {
         "title": "Transfer Styles",
         "items": [
-            "transferStyles"
+            "copystyle",
+            "pastestyle"
         ]
     }
 }

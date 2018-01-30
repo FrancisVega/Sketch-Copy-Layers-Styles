@@ -10,6 +10,17 @@ const copyInstanceSharedStyle = ( context, instance, klass ) => {
   return null;
 }
 
+const writeFile = (filename, the_string) => {
+  const path =[@"" stringByAppendingString: filename];
+  const str = [@"" stringByAppendingString: the_string];
+  str.dataUsingEncoding_(NSUTF8StringEncoding).writeToFile_atomically_(path, true);
+}
+
+const readFile = filePath => {
+  const fileContents = NSString.stringWithContentsOfFile(filePath);
+  return JSON.parse(fileContents.toString());
+}
+
 const transferStyle = ( context, original, targets ) => {
   // Filter target layers by original class
   const originalClass = original.class();
@@ -23,16 +34,24 @@ const transferStyle = ( context, original, targets ) => {
   });
 }
 
-function transfer ( context ) {
-  // Layers
-  const SELECTION = context.selection;
-  const original = SELECTION[0];
-  const targets = SELECTION.slice(1, SELECTION.length);
+const findLayersByID = ( oid, scope ) => {
+  const predicate = NSPredicate.predicateWithFormat( "objectID == %@", oid );
+  return scope.filteredArrayUsingPredicate( predicate );
+}
 
-  if ( SELECTION.length > 1 ){
+function copyStyle ( context ) {
+  const objectID = context.selection[0].objectID();
+  writeFile(`${NSHomeDirectory()}/.sketch-copy-style.json`, JSON.stringify({id:objectID+""}));
+}
+
+function paste ( context ) {
+  // Layers
+  const allFilesWidthObjectId = context.document.currentPage().layers().slice().map(ab => findLayersByID( readFile( `${NSHomeDirectory()}/.sketch-copy-style.json` ).id, ab.layers() ))
+  const original = allFilesWidthObjectId.slice().filter(l => l.length)[0][0]
+  const targets = context.selection;
+  if ( context.selection.length >= 1 ){
     transferStyle( context, original, targets );
     context.document.showMessage( '💅🏻 Styles copied!' );
-  } else {
-    context.document.showMessage( '💩 Select one original layer and target layers' );
   }
+
 }
