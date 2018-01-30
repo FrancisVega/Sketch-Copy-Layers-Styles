@@ -1,4 +1,4 @@
-# Transfer (assing) layers styles
+# Transfer (assign) layers styles
 
 ## How to use
 1 - Select one (original) layer
