@@ -2,6 +2,7 @@
 
 ## How to use
 1 - Select one (original) layer
+
 2 - Shift select the target layers
 
 ## THANKS
