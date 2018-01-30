@@ -1,7 +1,7 @@
 # Transfer (assign) layers styles
 
 ## How to use
-1 - Copy the style from one layers
+1 - Copy the style from one layer
 
 2 - Select target layer(s) and paste :)
 
