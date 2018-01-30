@@ -1,0 +1,29 @@
+{
+    "name": "Transfer text and layer styles",
+    "description": "Transfer text and layer styles",
+    "author": "Francis Vega",
+    "author": "hisconer@gmail.com",
+    "homepage": "",
+    "version": 0.1,
+    "identifier": "com.example.sketch.copystyles",
+    "appcast": "https://api.sketchpacks.com/v1/plugins/com.example.sketch.layoutsettings/appcast",
+    "compatibleVersion": "48.2",
+    "bundleVersion": 1,
+    "commands": [
+        {
+            "name": "Transfer Style",
+            "identifier": "transferStyles",
+            "handlers" : {
+                "run" : "transfer"
+            },
+            "script": "sketch-copy-style.js"
+        }
+    ],
+    "menu": {
+        "title": "Transfer Styles",
+        "items": [
+            "transferStyles"
+        ]
+    }
+}
+
