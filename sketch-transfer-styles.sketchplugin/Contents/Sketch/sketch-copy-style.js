@@ -47,14 +47,14 @@ const findLayersByID = ( oid, scope ) => {
 
 function copyStyle ( context ) {
   const objectID = context.selection[0].objectID();
-  copyToPasteboard ( context, objectID );
+  copyToPasteboard ( context, objectID + '' );
 }
 
-function paste ( context ) {
+function pasteStyle ( context ) {
   // Layers
   const objectIDFromPaste = getFromPasteboard( context );
-  const allFilesWidthObjectId = context.document.currentPage().layers().slice().map( ab => findLayersByID( objectIDFromPaste, ab.layers() ) )
-  const original = allFilesWidthObjectId.slice().filter(l => l.length)[0][0]
+  const allFilesWithObjectId = context.document.currentPage().layers().slice().map( ab => findLayersByID( objectIDFromPaste, ab.layers() ) )
+  const original = allFilesWithObjectId.slice().filter(l => l.length)[0][0]
   const targets = context.selection;
   if ( context.selection.length >= 1 ){
     transferStyle( context, original, targets );
