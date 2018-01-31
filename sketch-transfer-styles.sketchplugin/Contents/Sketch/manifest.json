@@ -22,7 +22,7 @@
             "name": "Paste Style",
             "identifier": "pastestyle",
             "handlers" : {
-                "run" : "paste"
+                "run" : "pasteStyle"
             },
             "script": "sketch-copy-style.js"
         }
