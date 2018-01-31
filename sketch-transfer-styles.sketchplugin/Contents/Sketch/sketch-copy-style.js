@@ -50,11 +50,16 @@ function copyStyle ( context ) {
   copyToPasteboard ( context, objectID + '' );
 }
 
+const searchLayerByIdInAllDocument = ( context, oid ) => {
+  const orphanLayers = context.document.currentPage().layers().slice().filter(layer => layer.class() != "MSArtboardGroup").filter(layer => layer.objectID()+"" == oid)
+  const artboardLayers = context.document.currentPage().layers().slice().filter(layer => layer.class() == "MSArtboardGroup").map(ab => ab.layers().slice().filter(layer => layer.objectID()+"" == oid))
+  return [].concat.apply([], orphanLayers.concat(artboardLayers))[0];
+}
+
 function pasteStyle ( context ) {
   // Layers
   const objectIDFromPaste = getFromPasteboard( context );
-  const allFilesWithObjectId = context.document.currentPage().layers().slice().map( ab => findLayersByID( objectIDFromPaste, ab.layers() ) )
-  const original = allFilesWithObjectId.slice().filter(l => l.length)[0][0]
+  const original = searchLayerByIdInAllDocument( context, objectIDFromPaste );
   const targets = context.selection;
   if ( context.selection.length >= 1 ){
     transferStyle( context, original, targets );
