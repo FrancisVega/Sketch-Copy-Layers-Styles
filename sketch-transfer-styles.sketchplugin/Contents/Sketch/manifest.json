@@ -1,17 +1,16 @@
 {
-    "name": "Transfer text and layer styles",
-    "description": "Transfer text and layer styles",
+    "name": "Copy/Paste Shared Styles",
+    "description": "Copy and Paste Shared Styles between layers.",
     "author": "Francis Vega",
     "author": "hisconer@gmail.com",
     "homepage": "",
-    "version": 0.4,
+    "version": 0.5,
     "identifier": "com.example.sketch.copystyles",
-    "appcast": "https://api.sketchpacks.com/v1/plugins/com.example.sketch.layoutsettings/appcast",
     "compatibleVersion": "48.2",
     "bundleVersion": 1,
     "commands": [
         {
-            "name": "Copy Style",
+            "name": "Copy Shared Style",
             "identifier": "copystyle",
             "handlers" : {
                 "run" : "copyStyle"
@@ -19,7 +18,7 @@
             "script": "sketch-copy-style.js"
         },
         {
-            "name": "Paste Style",
+            "name": "Paste Shared Style",
             "identifier": "pastestyle",
             "handlers" : {
                 "run" : "pasteStyle"
@@ -28,7 +27,7 @@
         }
     ],
     "menu": {
-        "title": "Transfer Styles",
+        "title": "Copy/Paste Shared Styles",
         "items": [
             "copystyle",
             "pastestyle"
