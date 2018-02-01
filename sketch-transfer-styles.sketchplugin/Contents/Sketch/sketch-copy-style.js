@@ -17,8 +17,7 @@ const transferStyle = ( context, original, targets ) => {
 
   // Processing targets layers
   targetsFiltered.map( layer => {
-    const klass = original.class();
-    copyStyle = copyInstanceSharedStyle( context, original, klass );
+    const copyStyle = copyInstanceSharedStyle( context, original, originalClass );
     pasteInstanceSharedStyle ( layer, copyStyle );
   });
 }
@@ -51,13 +50,13 @@ function copyStyle ( context ) {
 }
 
 const searchLayerByIdInAllDocument = ( context, oid ) => {
-  const orphanLayers = context.document.currentPage().layers().slice().filter(layer => layer.class() != "MSArtboardGroup").filter(layer => layer.objectID()+"" == oid)
-  const artboardLayers = context.document.currentPage().layers().slice().filter(layer => layer.class() == "MSArtboardGroup").map(ab => ab.layers().slice().filter(layer => layer.objectID()+"" == oid))
+  const pageLayers = context.document.currentPage().layers().slice();
+  const orphanLayers = pageLayers.filter(layer => layer.class() != "MSArtboardGroup").filter(layer => layer.objectID() + '' == oid)
+  const artboardLayers = pageLayers.filter(layer => layer.class() == "MSArtboardGroup").map(ab => ab.layers().slice().filter(layer => layer.objectID() + '' == oid))
   return [].concat.apply([], orphanLayers.concat(artboardLayers))[0];
 }
 
 function pasteStyle ( context ) {
-  // Layers
   const objectIDFromPaste = getFromPasteboard( context );
   const original = searchLayerByIdInAllDocument( context, objectIDFromPaste );
   const targets = context.selection;
