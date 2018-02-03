@@ -45,6 +45,24 @@ const findLayersByID = ( oid, scope ) => {
   return scope.filteredArrayUsingPredicate( predicate );
 }
 
+//
+// Devuelve la capa encontrada por ID
+// En caso de no encontrarla, devuelve nil
+//
+function layerByIDInContext ( layerID, artboard ) {
+  const artboardLayers = artboard.layers();
+  if( artboardLayers.length > 0 ) {
+    const layerByID = findLayersByID( layerID, artboardLayers );
+    if ( layerByID.length > 0 ) {
+      return layerByID[0];
+    } else {
+      return nil;
+    }
+  } else {
+    return nil;
+  }
+}
+
 function copyStyle ( context ) {
   const objectID = context.selection[0].objectID();
   copyToPasteboard ( context, objectID + '' );
