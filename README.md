@@ -1,7 +1,7 @@
-# Copy and Paste Shared Styles
+# Copy and Paste **Shared Styles**
 
-Copy and Paste layers/text shared styles from one layer to others.
-It's differs from CMD+ALT+C / V, this plugin copy / paste the shared style, not just copy the parameters.
+Copy and Paste shared styles.
+It's differs from CMD+ALT+C / V. This plugin copy and paste the **Shared Style**, not just the parameters.
 
 ## How to use
 1 - Copy the style from one layer
