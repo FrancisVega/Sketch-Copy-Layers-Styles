@@ -1,10 +1,16 @@
-const copyInstanceSharedTextStyle = ( context, instance ) => context.document.documentData().layerTextStyles().sharedStyleForInstance( instance.style() );
-const copyInstanceSharedLayerStyle = ( context, instance ) => context.document.documentData().layerStyles().sharedStyleForInstance( instance.style() );
-const pasteInstanceSharedStyle = ( layer, sharedStyle ) => {
-    layer.style = sharedStyle.newInstance();
+function copyInstanceSharedTextStyle ( context, instance ) {
+  context.document.documentData().layerTextStyles().sharedStyleForInstance( instance.style() );
 }
 
-const copyInstanceSharedStyle = ( context, instance, klass ) => {
+function copyInstanceSharedLayerStyle ( context, instance ) {
+  context.document.documentData().layerStyles().sharedStyleForInstance( instance.style() );
+}
+
+function pasteInstanceSharedStyle ( layer, sharedStyle ) {
+  layer.style = sharedStyle.newInstance();
+}
+
+function copyInstanceSharedStyle ( context, instance, klass ) {
   if ( klass == 'MSTextLayer' )
     return copyInstanceSharedTextStyle( context, instance );
   if ( klass == 'MSShapeGroup' )
@@ -12,7 +18,7 @@ const copyInstanceSharedStyle = ( context, instance, klass ) => {
   return null;
 }
 
-const transferStyle = ( context, original, targets ) => {
+function transferStyle ( context, original, targets ) {
   // Filter target layers by original class
   const originalClass = original.class();
   const targetsFiltered = targets.slice().filter( layer => layer.class() == originalClass );
@@ -25,7 +31,7 @@ const transferStyle = ( context, original, targets ) => {
   });
 }
 
-const findLayersByID = ( oid, scope ) => {
+function findLayersByID ( oid, scope ) {
   const predicate = NSPredicate.predicateWithFormat( "objectID == %@", oid );
   return scope.filteredArrayUsingPredicate( predicate );
 }
@@ -33,38 +39,35 @@ const findLayersByID = ( oid, scope ) => {
 // Devuelve la capa encontrada por ID en un scope
 // En caso de no encontrarla, devuelve nil
 function layerByID ( layerID, scope ) {
-    const layers = scope.layers();
-    if( layers.length > 0 ) {
-        const layerByID = findLayersByID( layerID, layers );
-        if ( layerByID.length == 1 ) {
-            return layerByID[0];
-        } else {
-            return null;
-        }
+  const layers = scope.layers();
+  if( layers.length > 0 ) {
+    const layerByID = findLayersByID( layerID, layers );
+    if ( layerByID.length == 1 ) {
+      return layerByID[0];
     } else {
-        return null;
+      return null;
     }
+  } else {
+    return null;
+  }
 }
 
 // Devuelve la capa encontrada por ID en los artboards de la página actual
 function layerByIDInArtboards ( layerID, page ) {
-    const artboards = page.layers();
-    for(let i=0; i<artboards.length; ++i) {
-        return layerByID( layerID, artboards[i] );
-    }
+  const artboards = page.layers();
+  for(let i=0; i<artboards.length; ++i) {
+    return layerByID( layerID, artboards[i] );
+  }
 }
 
 function findLayerIdByPage ( layerID, page ) {
-    const orphans = layerByID( layerID, page )
-    const inartboards = layerByIDInArtboards( layerID, page )
-    return orphans || inartboards;
+  const orphans = layerByID( layerID, page )
+  const inartboards = layerByIDInArtboards( layerID, page )
+  return orphans || inartboards;
 }
 
 function findLayerByIdInDocument ( context, layerID ) {
-  log("context => " + context)
-  log("document => " + context.document)
-  log("pages => " + context.document.pages())
-    return context.document.pages().slice().map( page => findLayerIdByPage( layerID, page ) ).filter( idPage => idPage != null )[0] || null;
+  return context.document.pages().slice().map( page => findLayerIdByPage( layerID, page ) ).filter( idPage => idPage != null )[0] || null;
 }
 
 function getFromPasteboard ( context ) {
@@ -84,9 +87,9 @@ function copyStyle ( context ) {
 }
 
 function copyToPasteboard ( context, string ) {
-    const pasteboard = NSPasteboard.generalPasteboard();
-    pasteboard.clearContents();
-    pasteboard.setString_forType( NSMutableString.stringWithString( string ), NSPasteboardTypeString );
+  const pasteboard = NSPasteboard.generalPasteboard();
+  pasteboard.clearContents();
+  pasteboard.setString_forType( NSMutableString.stringWithString( string ), NSPasteboardTypeString );
 }
 
 function pasteStyle ( context ) {
