@@ -63,6 +63,71 @@ function layerByIDInContext ( layerID, artboard ) {
   }
 }
 
+
+const findLayersByID = ( oid, scope ) => {
+  const predicate = NSPredicate.predicateWithFormat( "objectID == %@", oid );
+  return scope.filteredArrayUsingPredicate( predicate );
+}
+
+// Devuelve la capa encontrada por ID en un scope
+// En caso de no encontrarla, devuelve nil
+function layerByID ( layerID, scope ) {
+    const layers = scope.layers();
+    if( layers.length > 0 ) {
+        const layerByID = findLayersByID( layerID, layers );
+        if ( layerByID.length == 1 ) {
+            return layerByID[0];
+        } else {
+            return null;
+        }
+    } else {
+        return null;
+    }
+}
+
+// Devuelve la capa encontrada por ID en los artboards de la página actual
+function layerByIDInArtboards ( layerID, page ) {
+    const artboards = page.layers();
+    for(let i=0; i<artboards.length; ++i) {
+        return layerByID( layerID, artboards[i] ); 
+    }
+}
+
+
+// Buscamos la capa en la página
+function findLayerIdByPage ( layerID, page ) {
+    const orphans = layerByID( layerID, page )
+    const inartboards = layerByIDInArtboards( layerID, page )
+    return orphans || inartboards;
+}
+
+function findLayerByIdInDocument ( layerID ) {
+    return context.document.pages().slice().map( page => findLayerIdByPage( layerID, page ) ).filter( idPage => idPage != null )[0] || null;
+}
+
+
+log(findLayerByIdInDocument( "7DB73C9F-6730-4C03-87D8-59F00AF8CDAB" ));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function copyStyle ( context ) {
   const objectID = context.selection[0].objectID();
   copyToPasteboard ( context, objectID + '' );
