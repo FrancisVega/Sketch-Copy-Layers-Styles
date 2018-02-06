@@ -1,13 +1,13 @@
 function copyInstanceSharedTextStyle ( context, instance ) {
-  context.document.documentData().layerTextStyles().sharedStyleForInstance( instance.style() );
+  return context.document.documentData().layerTextStyles().sharedStyleForInstance( instance.style() );
 }
 
 function copyInstanceSharedLayerStyle ( context, instance ) {
-  context.document.documentData().layerStyles().sharedStyleForInstance( instance.style() );
+  return context.document.documentData().layerStyles().sharedStyleForInstance( instance.style() );
 }
 
 function pasteInstanceSharedStyle ( layer, sharedStyle ) {
-  layer.style = sharedStyle.newInstance();
+  return layer.style = sharedStyle.newInstance();
 }
 
 function copyInstanceSharedStyle ( context, instance, klass ) {
@@ -31,45 +31,6 @@ function transferStyle ( context, original, targets ) {
   });
 }
 
-function findLayersByID ( oid, scope ) {
-  const predicate = NSPredicate.predicateWithFormat( "objectID == %@", oid );
-  return scope.filteredArrayUsingPredicate( predicate );
-}
-
-// Devuelve la capa encontrada por ID en un scope
-// En caso de no encontrarla, devuelve nil
-function layerByID ( layerID, scope ) {
-  const layers = scope.layers();
-  if( layers.length > 0 ) {
-    const layerByID = findLayersByID( layerID, layers );
-    if ( layerByID.length == 1 ) {
-      return layerByID[0];
-    } else {
-      return null;
-    }
-  } else {
-    return null;
-  }
-}
-
-// Devuelve la capa encontrada por ID en los artboards de la página actual
-function layerByIDInArtboards ( layerID, page ) {
-  const artboards = page.layers();
-  for(let i=0; i<artboards.length; ++i) {
-    return layerByID( layerID, artboards[i] );
-  }
-}
-
-function findLayerIdByPage ( layerID, page ) {
-  const orphans = layerByID( layerID, page )
-  const inartboards = layerByIDInArtboards( layerID, page )
-  return orphans || inartboards;
-}
-
-function findLayerByIdInDocument ( context, layerID ) {
-  return context.document.pages().slice().map( page => findLayerIdByPage( layerID, page ) ).filter( idPage => idPage != null )[0] || null;
-}
-
 function getFromPasteboard ( context ) {
   const pasteboard = NSPasteboard.generalPasteboard();
   const pasteboardItems = pasteboard.pasteboardItems();
@@ -79,6 +40,11 @@ function getFromPasteboard ( context ) {
       return string;
     }
   }
+}
+
+const layerById = ( context, layerID ) => {
+  const z = context.document.pages().slice().map(item => item.children().slice().filter(layer => layer.objectID() + "" == layerID ))
+  return [].concat.apply([], z)[0]
 }
 
 function copyStyle ( context ) {
@@ -94,7 +60,7 @@ function copyToPasteboard ( context, string ) {
 
 function pasteStyle ( context ) {
   const objectIDFromPaste = getFromPasteboard( context );
-  const original = findLayerByIdInDocument ( context, objectIDFromPaste );
+  const original = layerById ( context, objectIDFromPaste )
   const targets = context.selection;
   if ( context.selection.length >= 1 ){
     transferStyle( context, original, targets );
